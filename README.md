@@ -24,8 +24,8 @@
                     ┌─────────────────────┼─────────────────────┐
                     │                     │                     │
              ┌──────▼──────┐    ┌─────────▼─────┐    ┌────────▼───────┐
-             │  PostgreSQL  │    │  Redis        │    │  Cloudflare R2 │
-             │  (database)  │    │  (task broker)│    │  (file storage)│
+             │  PostgreSQL │    │  Redis        │    │  Cloudflare R2 │
+             │  (database) │    │  (task broker)│    │  (file storage)│
              └─────────────┘    └───────┬───────┘    └────────────────┘
                                         │
                                 ┌───────▼───────┐
