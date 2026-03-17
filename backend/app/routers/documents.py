@@ -5,7 +5,7 @@ from app.core.dependencies import get_db, get_current_user
 from app.models.user import User
 from app.models.document import Document
 from app.schemas.document import DocumentOut
-from backend.app.services.r2 import upload_file, delete_file
+from app.services.r2 import upload_file, delete_file
 
 router = APIRouter()
 
