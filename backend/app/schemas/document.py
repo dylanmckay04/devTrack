@@ -8,7 +8,7 @@ class DocumentOut(BaseModel):
     owner_id: int
     application_id: Optional[int]
     filename: str
-    s3_key: str
+    r2_key: str
     uploaded_at: datetime
 
     class Config:
