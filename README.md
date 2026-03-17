@@ -1,6 +1,7 @@
 <h1>DevTrack</h1>
 <p>A full-stack job application tracker built for developers. Track applications across a kanban board, upload documents to cloud storage, and schedule email reminders - all updated in real time via WebSockets.</p>
-<p>To see the <strong>live API documentation</strong>, click <a href="https://devtrack-api.up.railway.app/docs" target="_blank">here</a>.</p>
+<p>To try the <strong>live full-stack application</strong>, click <a href="https://dev-track-bice.vercel.app/" target="_blank">here</a>.</p>
+<p>To see the <strong>live API documentation</strong>, click <a href="https://devtrack-production-5644.up.railway.app/docs" target="_blank">here</a>.</p>
 
 <h2>Features</h2>
 <ul>
@@ -107,7 +108,7 @@
 </ol>
 
 <h2>API Endpoints</h2>
-<p>Interactive documentation is available at the live API: <a href="https://devtrack-api.up.railway.app/docs" target="_blank">https://devtrack-api.up.railway.app/docs</a></p>
+<p>Interactive documentation is available at the live API: <a href="https://devtrack-production-5644.up.railway.app/docs" target="_blank">https://devtrack-production-5644.up.railway.app/docs</a></p>
 
 ### Authentication
 | Method | Endpoint | Description | Auth Required |
