@@ -55,10 +55,26 @@
     <li><a href="https://developers.cloudflare.com/r2/" target="_blank">Cloudflare R2</a> for document storage</li>
     <li>Data validation with <a href="https://docs.pydantic.dev/latest/" target="_blank">Pydantic</a></li>
     <li><a href="https://www.postgresql.org/" target="_blank">PostgreSQL</a> database</li>
+    <li><a href="https://docs.pytest.org/en/stable/#" target="_blank">pytest</a> test suite (11 tests)</li>
     <li><a href="https://www.sqlalchemy.org/" target="_blank">SQLAlchemy</a> for ORM interaction</li>
     <li>WebSocket support for real-time board sync</li>
 </ul>
+<h2>Testing</h2>
+<p>The backend includes a pytest test suite covering authentication and core application CRUD operations. Tests run against a dedicated PostgreSQL test database and use FastAPI's <code>TestClient</code> with SQLAlchemy dependency overrides to ensure full isolation from the production database.</p>
 
+<h3>Test Coverage</h3>
+<ul>
+    <li>User registration and JWT authentication flow</li>
+    <li>Protected route enforcement without a valid token</li>
+    <li>Full application CRUD: create, read, update status, delete</li>
+    <li>Authorization isolation - users cannot access other users' applications</li>
+</ul>
+
+<h3>Running the tests</h3>
+<ol>
+    <li>Ensure a PostgreSQL database named <code>devtrack_test</code> exists locally</li>
+    <li>From the <code>backend</code> directory, run <code>pytest -v</code></li>
+</ol>
 <h2>Technical Decisions</h2>
 <h3>Why Celery + Redis for email reminders?</h3>
 <p>Reminders need to fire at arbitrary user-defined times, which makes a cron job a poor fit - cron is designed for recurring tasks on a fixed schedule, not one-off events at unpredictable future times. A background thread inside FastAPI would work for simple cases but runs inside the same process as the web server, meaning any pending reminders would be lost if the server restarts. Celery with Redis as the broker runs in a completely separate worker process, persisting scheduled tasks in Redis so they survive server restarts. The <code>apply_async</code> method with an <code>eta</code> parameter maps directly to the reminder use case: schedule this task to run at a specific future datetime.</p>
