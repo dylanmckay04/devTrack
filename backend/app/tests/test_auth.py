@@ -8,4 +8,40 @@ def test_health_check():
     assert response.status_code == 200
     assert response.json() == {"status": "ok"}
 
+def test_register(client):
+    response = client.post("/auth/register", json={
+        "email": "dylan@example.com",
+        "password": "strongPass123"
+    })
+    assert response.status_code == 201
+    data = response.json()
+    assert data["email"] == "dylan@example.com"
+    assert "password" not in data
+
+def test_login(client):
+    client.post("/auth/register", json={
+        "email": "dylan@example.com",
+        "password": "strongPass123"
+    })
+    response = client.post("/auth/login", json={
+        "email": "dylan@example.com",
+        "password": "strongPass123"
+    })
+    assert response.status_code == 200
+    assert "access_token" in response.json()
+    
+def test_login_wrong_password(client):
+    client.post("/auth/register", json={
+        "email": "dylan@example.com",
+        "password": "strongPass123"
+    })
+    response = client.post("/auth/login", json={
+        "email": "dylan@example.com",
+        "password": "wrongPass321"
+    })
+    assert response.status_code == 401
+
+def test_protected_route_without_token(client):
+    response = client.get("/auth/me")
+    assert response.status_code == 401
 
