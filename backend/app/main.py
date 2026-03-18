@@ -5,6 +5,7 @@ from app.database import engine
 from app.routers import auth, applications, documents, reminders, websocket
 import time
 import sqlalchemy
+import os
 
 def wait_for_db(retries=10, delay=3):
     for attempt in range(retries):
@@ -16,8 +17,8 @@ def wait_for_db(retries=10, delay=3):
             print(f"Database not ready, retrying in {delay}s... (attempt {attempt + 1}/{retries})")
             time.sleep(delay)
     raise Exception("Could not connect to database after multiple retries")
-
-wait_for_db()
+if not os.getenv("TESTING"):
+    wait_for_db()
 
 app = FastAPI(title="DevTrack")
 
