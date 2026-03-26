@@ -17,6 +17,9 @@ async def upload_document(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
+    application = db.query(Application).filter(Application.id == app_id, Application.owner_id == current_user.id).first()
+    if not application:
+        raise HTTPException(status_code=404, detail="Application not found")
     r2_key = await upload_file(file, current_user.id)
     document = Document(
         owner_id=current_user.id,
