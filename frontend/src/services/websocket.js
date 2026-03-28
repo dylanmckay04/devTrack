@@ -2,7 +2,11 @@ const defaultApiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 const WS_URL = import.meta.env.VITE_WS_URL || defaultApiUrl.replace(/^http/, 'ws') + '/ws/board'
 
 export function createBoardSocket(onMessage) {
-  const ws = new WebSocket(WS_URL)
+  const token = localStorage.getItem('token')
+  const wsUrl = token
+    ? `${WS_URL}?token=${encodeURIComponent(token)}`
+    : WS_URL
+  const ws = new WebSocket(wsUrl)
 
   ws.onopen = () => console.log('[ws] connected')
   ws.onclose = () => console.log('[ws] disconnected')
