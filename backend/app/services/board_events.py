@@ -4,19 +4,24 @@ from typing import Any
 
 class ConnectionManager:
     def __init__(self):
-        self.active_connections: list[WebSocket] = []
+        self.active_connections: list[tuple[WebSocket, int]] = []
 
-    async def connect(self, websocket: WebSocket):
+    async def connect(self, websocket: WebSocket, user_id: int):
         await websocket.accept()
-        self.active_connections.append(websocket)
+        self.active_connections.append((websocket, user_id))
 
     def disconnect(self, websocket: WebSocket):
-        if websocket in self.active_connections:
-            self.active_connections.remove(websocket)
+        self.active_connections = [
+            (connection, connection_user_id)
+            for connection, connection_user_id in self.active_connections
+            if connection is not websocket
+        ]
 
-    async def broadcast(self, message: dict[str, Any]):
+    async def broadcast_to_user(self, user_id: int, message: dict[str, Any]):
         disconnected: list[WebSocket] = []
-        for connection in self.active_connections:
+        for connection, connection_user_id in self.active_connections:
+            if connection_user_id != user_id:
+                continue
             try:
                 await connection.send_json(message)
             except Exception:
@@ -30,7 +35,8 @@ manager = ConnectionManager()
 
 
 async def broadcast_application_event(event_type: str, application: Any):
-    await manager.broadcast(
+    await manager.broadcast_to_user(
+        application.owner_id,
         {
             "type": event_type,
             "application": {
