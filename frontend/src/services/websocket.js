@@ -1,21 +1,9 @@
 const defaultApiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 const WS_URL = import.meta.env.VITE_WS_URL || defaultApiUrl.replace(/^http/, 'ws') + '/ws/board'
 
-export function createBoardSocket(socketToken, onMessage) {
+export function createBoardSocket(socketToken, onMessage, handlers = {}) {
   const wsUrl = `${WS_URL}?token=${encodeURIComponent(socketToken)}`
   const ws = new WebSocket(wsUrl)
-
-  ws.onopen = () => console.log('[ws] connected')
-  ws.onclose = () => console.log('[ws] disconnected')
-  ws.onerror = (e) => console.error('[ws] error', e)
-  ws.onmessage = (event) => {
-    try {
-      const data = JSON.parse(event.data)
-      onMessage(data)
-    } catch (e) {
-      console.error('[ws] failed to parse message', e)
-    }
-  }
 
   const keepAlive = window.setInterval(() => {
     if (ws.readyState === WebSocket.OPEN) {
@@ -23,10 +11,29 @@ export function createBoardSocket(socketToken, onMessage) {
     }
   }, 25000)
 
-  const originalClose = ws.close.bind(ws)
-  ws.close = (...args) => {
+  ws.onopen = (event) => {
+    console.log('[ws] connected')
+    handlers.onOpen?.(event)
+  }
+
+  ws.onclose = (event) => {
     window.clearInterval(keepAlive)
-    return originalClose(...args)
+    console.log('[ws] disconnected')
+    handlers.onClose?.(event)
+  }
+
+  ws.onerror = (event) => {
+    console.error('[ws] error', event)
+    handlers.onError?.(event)
+  }
+
+  ws.onmessage = (event) => {
+    try {
+      const data = JSON.parse(event.data)
+      onMessage(data)
+    } catch (e) {
+      console.error('[ws] failed to parse message', e)
+    }
   }
 
   return ws
