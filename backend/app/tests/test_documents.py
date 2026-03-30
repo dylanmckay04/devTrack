@@ -1,9 +1,8 @@
 from io import BytesIO
 import pytest
-import app.services.r2 as r2_service
+import app.routers.documents as doc_router
 
 
-FAKE_PDF = BytesIO(b"%PDF-1.4 fake content")
 FAKE_R2_KEY = "users/1/documents/fake-uuid.pdf"
 
 
@@ -13,8 +12,8 @@ def mock_r2(monkeypatch):
     async def fake_upload(file, user_id):
         return FAKE_R2_KEY
 
-    monkeypatch.setattr(r2_service, "upload_file", fake_upload)
-    monkeypatch.setattr(r2_service, "delete_file", lambda key: None)
+    monkeypatch.setattr(doc_router, "upload_file", fake_upload)
+    monkeypatch.setattr(doc_router, "delete_file", lambda key: None)
 
 
 def _pdf_file():
