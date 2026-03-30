@@ -1,5 +1,6 @@
 from celery import Celery
 from app.config import settings
+from app.database import SessionLocal
 from app.services.email import send_email
 
 celery_app = Celery("devtrack", broker=settings.REDIS_URL, backend=settings.REDIS_URL)
@@ -13,3 +14,11 @@ def send_reminder_email(reminder_id: int, user_email: str, message: str):
         subject="DevTrack Reminder",
         body=f"Reminder: {message}",
     )
+
+    db = SessionLocal()
+    try:
+        from app.models.reminder import Reminder
+        db.query(Reminder).filter(Reminder.id == reminder_id).update({"sent": True})
+        db.commit()
+    finally:
+        db.close()
