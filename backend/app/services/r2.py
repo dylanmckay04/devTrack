@@ -1,5 +1,6 @@
 import boto3
 import uuid
+import os
 from fastapi import UploadFile
 from app.config import settings
 
@@ -14,7 +15,7 @@ r2_client = boto3.client(
 
 async def upload_file(file: UploadFile, user_id: int) -> str:
     """Upload a file to R2 and return the R2 key."""
-    extension = file.filename.split(".")[-1]
+    extension = os.path.splitext(file.filename)[1].lstrip(".")
     r2_key = f"users/{user_id}/documents/{uuid.uuid4()}.{extension}"
     contents = await file.read()
     r2_client.put_object(
