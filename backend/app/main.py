@@ -2,6 +2,7 @@ import logging
 import os
 import time
 import sqlalchemy
+from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
@@ -23,10 +24,15 @@ def wait_for_db(retries=10, delay=3):
             logger.warning("Database not ready, retrying in %ds... (attempt %d/%d)", delay, attempt + 1, retries)
             time.sleep(delay)
     raise Exception("Could not connect to database after multiple retries")
-if not os.getenv("TESTING"):
-    wait_for_db()
 
-app = FastAPI(title="DevTrack")
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    if not os.getenv("TESTING"):
+        wait_for_db()
+    yield
+    pass
+
+app = FastAPI(title="DevTrack", lifespan=lifespan)
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
