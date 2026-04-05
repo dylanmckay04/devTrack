@@ -11,7 +11,7 @@ class SocketTokenStore:
     def __init__(self):
         self._memory_tokens: dict[str, tuple[str, float]] = {}
         self._memory_lock = Lock()
-        self._redis_client = redis.Redis.from_url(settings.REDIS_URL, decode_responses=True)
+        self._redis_client = redis.Redis.from_url(settings.CELERY_BROKER_URL, decode_responses=True)
 
     def remember(self, jti: str, user_id: int, expires_in: int) -> None:
         if not jti:

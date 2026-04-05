@@ -3,7 +3,7 @@ from app.config import settings
 from app.database import SessionLocal
 from app.services.email import send_email
 
-celery_app = Celery("devtrack", broker=settings.REDIS_URL, backend=settings.REDIS_URL)
+celery_app = Celery("devtrack", broker=settings.CELERY_BROKER_URL, backend=settings.CELERY_RESULT_BACKEND)
 
 
 @celery_app.task

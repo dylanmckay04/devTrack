@@ -8,7 +8,8 @@ _env_file = Path(__file__).resolve().parents[2] / ".env"
 class Settings(BaseSettings):
     DATABASE_URL: str
     SECRET_KEY: str
-    REDIS_URL: str
+    CELERY_BROKER_URL: str
+    CELERY_RESULT_BACKEND: str
     R2_ACCESS_KEY_ID: str
     R2_SECRET_ACCESS_KEY: str
     R2_ACCOUNT_ID: str
