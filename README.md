@@ -5,7 +5,7 @@ DevTrack is a full-stack job application tracker designed to feel fast, reliable
 This project is the centerpiece of my portfolio and reflects how I approach software engineering end-to-end: product thinking, backend reliability, security hardening, and practical UX.
 
 - Live app: https://dev-track-bice.vercel.app/
-- Live API docs: https://devtrack-production-5644.up.railway.app/docs
+- Live API docs: https://devtrack-production.up.railway.app/docs
 
 ## What This Project Demonstrates
 
